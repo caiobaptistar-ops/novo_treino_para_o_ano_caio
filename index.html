@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meu Treino</title>
+<style>
+:root{--bg:#f4f6f8;--cd:#fff;--tx:#17212b;--mu:#6b7a88;--ac:#00897b;--ln:#dde3e8;--ok:#2e7d32;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161c;--cd:#1a232c;--tx:#e8eef3;--mu:#92a1ae;--ac:#26a69a;--ln:#2b3844;--ok:#66bb6a}}
+:root[data-theme="dark"]{--bg:#10161c;--cd:#1a232c;--tx:#e8eef3;--mu:#92a1ae;--ac:#26a69a;--ln:#2b3844;--ok:#66bb6a}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:calc(128px + env(safe-area-inset-bottom,0px))}
+main{max-width:720px;margin:0 auto;padding:12px}
+h2{margin:6px 0 10px;font-size:20px}h3{margin:14px 0 6px;font-size:15px}
+.cd{background:var(--cd);border:1px solid var(--ln);border-radius:12px;padding:12px;margin:0 0 10px}
+.mu{color:var(--mu);font-size:13px}.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.st b{display:block;font-size:24px;color:var(--ac)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px}
+.chip{flex:none;padding:7px 12px;border-radius:20px;border:1px solid var(--ln);background:var(--cd);color:var(--tx);font:inherit;font-size:13px}
+.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+button,input,select,textarea{font:inherit;color:var(--tx)}
+input,select,textarea{background:var(--bg);border:1px solid var(--ln);border-radius:8px;padding:8px;width:100%}
+.b{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:11px 14px;font-weight:600;width:100%}
+.b.s{background:var(--bg);color:var(--tx);border:1px solid var(--ln);width:auto;padding:7px 11px;font-weight:500}
+.ex{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center}
+.lb{background:var(--ac);color:#fff;border-radius:6px;padding:2px 7px;font-weight:700;font-size:12px}
+.ex .nm{font-weight:600}.ex .w{width:92px}.sets{display:flex;gap:6px;grid-column:1/-1;flex-wrap:wrap}
+.sb{width:38px;height:38px;border-radius:50%;border:2px solid var(--ac);background:none;font-weight:700}
+.sb.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:8px}.f label{font-size:12px;color:var(--mu)}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:5px 4px;border-bottom:1px solid var(--ln);text-align:left}
+.ch{width:100%;height:auto}.ln{fill:none;stroke:var(--ac);stroke-width:2}.dt,.bar{fill:var(--ac)}.lt{fill:var(--mu);font-size:9px}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--cd);border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav button{flex:1;background:none;border:0;padding:12px 2px;font-size:12px;color:var(--mu)}nav button.on{color:var(--ac);font-weight:700}
+#mini{position:fixed;left:0;right:0;bottom:calc(46px + env(safe-area-inset-bottom,0px));background:var(--cd);border-top:1px solid var(--ln);display:flex;align-items:center;gap:8px;padding:6px 12px;z-index:4}
+#mini span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}
+#tm{position:sticky;top:0;background:var(--ac);color:#fff;border-radius:10px;padding:8px 12px;margin-bottom:8px;display:none;z-index:3;font-weight:700}
+</style></head><body>
+<main id="v"></main>
+<div id="mini"></div>
+<nav id="nv"></nav>
+<script>
+const KG={d1:1,d2:2};
+// plano: nome;series×reps;tipo;base;passo  (d1/d2 halter, m máquina, p anilhas, b barra, t tempo, w peso do corpo)
+const PL=[
+[["Agachamento goblet;3×12;d1;12;1","Cadeira extensora;3×12;m;25;2.5","Leg press 45°;3×12;p;40;5","Afundo estático (halteres);3×10/perna;d2;6;1","Panturrilha em pé (halteres);3×15;d2;8;1"],
+["Supino reto (halteres);3×12;d2;10;1","Remada baixa;3×12;m;30;2.5","Desenvolvimento (halteres);3×12;d2;6;1","Puxada alta aberta;3×12;m;35;2.5","Rosca direta (halteres);3×12;d2;6;1"],
+["Stiff com halteres;3×12;d2;8;1","Cadeira flexora;3×12;m;20;2.5","Elevação de quadril (halter);3×12;d1;14;1","Cadeira abdutora;3×15;m;25;2.5","Prancha frontal;3×30 s;t;30;5"],
+["Supino inclinado (halteres);3×12;d2;8;1","Remada unilateral (halter);3×12/lado;d1;12;1","Elevação lateral;3×15;d2;3;.6","Puxada alta supinada;3×12;m;30;2.5","Tríceps na polia;3×12;m;10;2.5"],
+["Agachamento búlgaro;3×10/perna;d2;4;1","Panturrilha unilateral;3×12/perna;d1;6;1","Step-up no banco;3×10/perna;d2;6;1","Cadeira adutora;3×15;m;25;2.5","Dead bug;3×10/lado;w"],
+["Flexão de braços;3×10;w","Remada curvada (barra);3×10;b;20;4","Crossover (polias);3×12;m;5;2.5","Rosca martelo;3×12;d2;6;1","Prancha lateral;3×20 s/lado;t;20;5"]],
+[["Agachamento livre (barra);3×10;b;40;5","Cadeira extensora;3×12;m;35;2.5","Leg press 45°;3×10;p;70;5","Afundo caminhando (halteres);3×10/perna;d2;10;1","Panturrilha em pé (halteres);3×15;d2;12;1"],
+["Supino reto (barra);3×10;b;30;4","Remada baixa;3×10;m;40;2.5","Desenvolvimento (halteres);3×10;d2;8;1","Puxada alta aberta;3×10;m;45;2.5","Rosca direta (halteres);3×12;d2;8;1"],
+["Terra romeno (barra);3×10;b;40;5","Cadeira flexora;3×12;m;30;2.5","Elevação de quadril (barra);3×10;b;40;5","Cadeira abdutora;3×15;m;35;2.5","Prancha frontal;3×40 s;t;40;5"],
+["Supino inclinado (halteres);3×10;d2;12;1","Remada unilateral (halter);3×10/lado;d1;15;1","Elevação lateral;3×12;d2;5;.6","Puxada alta supinada;3×10;m;40;2.5","Tríceps corda (polia);3×12;m;15;2.5"],
+["Agachamento búlgaro;3×8/perna;d2;8;1","Panturrilha unilateral;3×12/perna;d1;10;1","Step-up alto (halteres);3×10/perna;d2;10;1","Cadeira adutora;3×15;m;40;2.5","Elevação de pernas;3×15;w"],
+["Flexão (pés no banco);3×12;w","Remada curvada (barra);3×10;b;40;4","Crossover (polias);3×12;m;7.5;2.5","Rosca martelo;3×12;d2;8;1","Prancha lateral;3×30 s/lado;t;30;5"]],
+[["Agachamento livre (barra);4×5;b;60;5","Panturrilha em pé (halteres);4×12;d2;14;1","Leg press 45°;3×8;p;100;5","Cadeira extensora;3×10;m;45;2.5","Prancha frontal;3×45 s;t;45;5"],
+["Supino reto (barra);4×5;b;40;4","Remada baixa;4×8;m;50;2.5","Desenvolvimento em pé (halt.);3×8;d2;10;1","Puxada alta aberta;3×10;m;50;2.5","Rosca direta (halteres);3×10;d2;10;1"],
+["Terra romeno (barra);4×5;b;60;5","Cadeira flexora;4×8;m;40;2.5","Elevação de quadril (barra);3×8;b;60;5","Cadeira abdutora;3×12;m;45;2.5","Elevação de pernas;3×12;w"],
+["Supino inclinado (halteres);4×6;d2;14;1","Remada unilateral (halter);4×8/lado;d1;17;.5","Elevação lateral;3×12;d2;6;.6","Puxada alta supinada;3×10;m;45;2.5","Tríceps corda (polia);3×10;m;20;2.5"],
+["Agachamento búlgaro;4×6/perna;d2;12;1","Panturrilha unilateral;4×10/perna;d1;14;1","Step-up alto (halteres);3×8/perna;d2;14;1","Cadeira adutora;3×12;m;50;2.5","Dead bug;3×12/lado;w"],
+["Remada curvada (barra);4×6;b;40;4","Flexão (pés no banco);4×10;w","Crossover (polias);3×12;m;10;2.5","Rosca martelo;3×10;d2;8;1","Caminhada c/ halteres (farmer);3×30 m;d2;14;1"]],
+[["Agachamento livre (barra);3×5;b;70;5","Agachamento com salto;3×6;d2;4;.6","Leg press 45°;3×8;p;110;5","Avanço caminhando (halteres);3×10/perna;d2;12;1","Panturrilha em pé (halteres);3×15;d2;16;.6"],
+["Supino reto (barra);4×5;b;60;3","Remada baixa;4×8;m;55;2.5","Desenvolvimento em pé (halt.);3×8;d2;12;1","Puxada alta aberta;3×8;m;55;2.5","Rosca direta (halteres);3×10;d2;12;1"],
+["Terra romeno (barra);3×5;b;70;5","Salto horizontal;3×5;w","Elevação de quadril (barra);3×8;b;70;5","Cadeira flexora;3×10;m;45;2.5","Prancha c/ toque no ombro;3×12/lado;w"],
+["Supino inclinado (halteres);4×6;d2;16;.6","Remada unilateral (halter);4×8/lado;d1;20;0","Elevação lateral;3×12;d2;7;.6","Puxada alta supinada;3×8;m;50;2.5","Tríceps corda (polia);3×10;m;25;2.5"],
+["Agachamento búlgaro;3×6/perna;d2;14;.8","Saltos alternados (bounding);3×10;w","Step-up alto (halteres);3×8/perna;d2;16;.8","Cadeira abdutora;3×12;m;50;2.5","Prancha frontal;3×50 s;t;50;5"],
+["Remada curvada (barra);4×6;b;50;4","Flexão (pés no banco);4×12;w","Caminhada c/ halteres (farmer);3×30 m;d2;18;.4","Rosca martelo;3×8;d2;10;1","Prancha lateral;3×40 s/lado;t;40;5"]]];
+const DK=['seg','ter','qua','qui','sex','sab'],DN=['Seg · Perna A','Ter · Sup. A','Qua · Perna B','Qui · Sup. B','Sex · Perna C','Sáb · Sup. C'];
+const PN=['Base e técnica','Hipertrofia e força de base','Força','Potência e específico'];
+const REST=[[45,45],[45,45],[60,45],[60,45]],LB=['A1','A2','B1','B2','C'];
+const iso=d=>d.toLocaleDateString('sv'),today=()=>iso(new Date());
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nf=x=>String(+x.toFixed(1)).replace('.',',');
+let S={start:today(),mes:null,q:null,loads:{},done:{},med:[],chk:{},tab:'hoje',day:null,ex:null};
+try{Object.assign(S,JSON.parse(localStorage.getItem('treino_v1')||'{}'))}catch(e){}
+S.day=null;
+const save=()=>{try{localStorage.setItem('treino_v1',JSON.stringify(S))}catch(e){}};
+function cur(){const d=Math.floor((new Date(today())-new Date(S.start))/864e5),m=S.mes!=null?S.mes:Math.max(0,Math.min(11,Math.floor(d/30.44)));
+ const q=S.q!=null?S.q:(((d%30.44)>=14&&S.mes==null)?1:0);return{m,q,ph:Math.floor(m/3),k:2*(m%3)+q}}
+function parse(s){const a=s.split(';');return{n:a[0],sr:a[1],kind:a[2],base:+a[3]||0,step:+a[4]||0}}
+function sug(e,k){const v=e.base+e.step*k,r=(x,u)=>Math.floor(x/u+.5)*u;
+ return e.kind=='w'?null:e.kind=='mach'||e.kind=='m'?r(v,2.5):e.kind=='p'?r(v,5):e.kind=='b'?r(v,10):e.kind=='t'?r(v,5):r(v,1)}
+function shown(e,k){return e.kind=='w'?'PC':sug(e,k)==null?'':nf(sug(e,k))+(e.kind=='t'?' s':' kg')+(e.kind=='d2'?' (cada)':'')}
+function dayIdx(){if(S.day!=null)return S.day;const w=new Date().getDay();return w==0?0:w-1}
+function vol(day,c){return PL[c.ph][day].reduce((t,s,i)=>{const e=parse(s);if(e.kind=='w'||e.kind=='t')return t;
+ const m=e.sr.match(/(\d+)×(\d+)/),w=+((S.loads[c.ph+'|'+day+'|'+i])??sug(e,c.k));return t+m[1]*m[2]*w*(e.kind=='d2'?2:1)},0)}
+// ---------- gráficos
+function chart(p,t){if(!p.length)return'<p class="mu">Sem dados ainda.</p>';
+ const w=320,h=130,pd=24,mx=Math.max(...p.map(a=>a.v)),mn=t=='l'?Math.min(...p.map(a=>a.v)):0,r=(mx-mn)||1,n=p.length;
+ const x=i=>pd+(n>1?i*(w-2*pd)/(n-1):(w-2*pd)/2),y=v=>h-pd-(v-mn)/r*(h-2*pd);let s=`<svg viewBox="0 0 ${w} ${h}" class="ch">`;
+ if(t=='l')s+=`<polyline class="ln" points="${p.map((a,i)=>x(i)+','+y(a.v)).join(' ')}"/>`+p.map((a,i)=>`<circle class="dt" cx="${x(i)}" cy="${y(a.v)}" r="3"/>`).join('');
+ else{const sw=(w-2*pd)/n;s+=p.map((a,i)=>`<rect class="bar" x="${pd+i*sw+2}" y="${y(a.v)}" width="${sw*.7}" height="${Math.max(0,h-pd-y(a.v))}" rx="2"/>`).join('')}
+ s+=`<text class="lt" x="${pd}" y="${h-8}">${esc(p[0].l)}</text><text class="lt" x="${w-pd}" y="${h-8}" text-anchor="end">${esc(p[n-1].l)}</text><text class="lt" x="${pd}" y="12">máx ${nf(mx)}</text></svg>`;return s}
+// ---------- telas
+const V={
+hoje(){const c=cur(),di=dayIdx(),t=today(),ph=c.ph,dn=S.done[t];
+ let h=`<div id="tm"></div><h2>Treino de hoje</h2><p class="mu">Mês ${c.m+1} · Fase ${ph+1}: ${PN[ph]} · carga da ${c.q?'3ª–4ª':'1ª–2ª'} semana</p>
+ <div class="chips">${DN.map((n,i)=>`<button class="chip ${i==di?'on':''}" onclick="S.day=${i};R()">${n}</button>`).join('')}</div>`;
+ PL[ph][di].forEach((s,i)=>{const e=parse(s),key=ph+'|'+di+'|'+i,ov=S.loads[key],ns=+e.sr[0],ck=(S.chk[t]||{})[key]||0,rs=i%2==0&&i<4?0:i==1||i==3?REST[ph][i==1?0:1]:30;
+  h+=`<div class="cd ex"><span class="lb">${LB[i]}</span><div><div class="nm">${esc(e.n)}</div><div class="mu">${esc(e.sr)} · desc. ${rs?rs+' s':'0 s (vai p/ '+LB[i+1]+')'} · sugerido: <b>${shown(e,c.k)}</b></div></div>
+  ${e.kind=='w'?'<span class="mu">peso do corpo</span>':`<input class="w" type="number" inputmode="decimal" step="0.5" min="0" value="${ov??sug(e,c.k)}" onchange="S.loads['${key}']=+this.value;save()" aria-label="Carga">`}
+  <div class="sets">${Array.from({length:ns},(_,j)=>`<button class="sb ${j<ck?'on':''}" onclick="sb('${key}',${j},${rs})">${j+1}</button>`).join('')}${rs?`<button class="b s" onclick="tm(${rs})">Descanso ${rs}s</button>`:''}</div></div>`});
+ h+=dn?`<div class="cd"><b style="color:var(--ok)">✔ Presença confirmada hoje</b> · volume ${Math.round(dn.v)} kg<br><button class="b s" onclick="delete S.done['${t}'];save();R()">Desfazer</button></div>`
+ :`<button class="b" onclick="conf(${di})">Confirmar presença no treino</button>`;return h},
+evo(){const c=cur(),ds=Object.keys(S.done).sort(),m=[...S.med].sort((a,b)=>a.d>b.d?1:-1),n30=ds.filter(d=>(new Date(today())-new Date(d))/864e5<30).length;
+ const wk={};ds.forEach(d=>{const x=new Date(d+'T12:00');x.setDate(x.getDate()-((x.getDay()+6)%7));const k=iso(x);wk[k]=(wk[k]||0)+1});
+ const ws=Object.keys(wk).sort().slice(-8).map(k=>({l:k.slice(5),v:wk[k]})),pe=m.filter(a=>a.peso),ex={};
+ ds.forEach(d=>Object.keys(S.done[d].l||{}).forEach(k=>(ex[k]=ex[k]||[]).push({l:d.slice(5),v:S.done[d].l[k]})));
+ const names=Object.keys(ex),sel=S.ex&&ex[S.ex]?S.ex:names[0];
+ return`<h2>Minha evolução</h2><div class="g"><div class="cd st"><b>${ds.length}</b>treinos confirmados</div><div class="cd st"><b>${n30}</b>nos últimos 30 dias</div>
+ <div class="cd st"><b>${pe.length?nf(pe[pe.length-1].peso):'–'}</b>peso atual (kg)${pe.length>1?`<br><span class="mu">${nf(pe[pe.length-1].peso-pe[0].peso)} kg desde o início</span>`:''}</div><div class="cd st"><b>${c.m+1}/12</b>mês do plano</div></div>
+ <h3>Peso corporal (kg)</h3><div class="cd">${chart(pe.map(a=>({l:a.d.slice(5),v:+a.peso})),'l')}</div>
+ <h3>Treinos por semana</h3><div class="cd">${chart(ws,'b')}</div>
+ <h3>Volume por treino (kg levantados)</h3><div class="cd">${chart(ds.slice(-14).map(d=>({l:d.slice(5),v:Math.round(S.done[d].v)})),'b')}</div>
+ <h3>Carga por exercício</h3><div class="cd">${names.length?`<select onchange="S.ex=this.value;R()">${names.map(k=>`<option ${k==sel?'selected':''}>${esc(k)}</option>`).join('')}</select>${chart(ex[sel],'l')}`:'<p class="mu">Confirme treinos para ver a evolução das cargas.</p>'}</div>
+ <h3>Medidas (primeira → última)</h3><div class="cd">${MS.map(([k,l])=>{const a=m.filter(x=>x[k]);return a.length?`<div>${l}: ${nf(+a[0][k])} → <b>${nf(+a[a.length-1][k])}</b> cm</div>`:''}).join('')||'<p class="mu">Registre medidas na aba Medidas.</p>'}</div>`},
+med(){const m=[...S.med].sort((a,b)=>a.d<b.d?1:-1);
+ return`<h2>Peso e medidas</h2><div class="cd"><div class="f"><div><label>Data</label><input id="m_d" type="date" value="${today()}"></div><div><label>Peso (kg)</label><input id="m_peso" type="number" inputmode="decimal" step="0.1"></div>
+ ${MS.map(([k,l])=>`<div><label>${l} (cm)</label><input id="m_${k}" type="number" inputmode="decimal" step="0.1"></div>`).join('')}</div><br><button class="b" onclick="addm()">Salvar medidas</button></div>
+ <div class="cd" style="overflow-x:auto"><table><tr><th>Data</th><th>Peso</th>${MS.map(a=>`<th>${a[1].slice(0,4)}</th>`).join('')}<th></th></tr>${m.map(a=>`<tr><td>${a.d.slice(5)}</td><td>${a.peso||''}</td>${MS.map(([k])=>`<td>${a[k]||''}</td>`).join('')}<td><button class="b s" onclick="S.med=S.med.filter(x=>x!=S.med.find(y=>y.d=='${a.d}'&&y.t==${a.t}));save();R()">×</button></td></tr>`).join('')}</table></div>`},
+mus(){return`<h2>Músicas</h2><div class="cd"><p class="mu">Escolha arquivos de áudio do celular. Ficam salvos neste navegador e continuam tocando ao trocar de aba.</p>
+ <input type="file" accept="audio/*" multiple onchange="addt(this.files)"></div><div class="cd">${T.length?T.map((t,i)=>`<div style="display:flex;gap:6px;align-items:center;padding:4px 0"><button class="chip ${i==ci?'on':''}" onclick="pl(${i})">▶</button><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.name)}</span><button class="b s" onclick="rmt(${t.id})">×</button></div>`).join(''):'<p class="mu">Nenhuma música ainda.</p>'}
+ <br><input id="sk" type="range" min="0" max="100" value="0" oninput="A.currentTime=A.duration*this.value/100"><label class="mu">Volume</label><input type="range" min="0" max="100" value="${A.volume*100}" oninput="A.volume=this.value/100"></div>`},
+plano(){const c=cur();return`<h2>Plano e dados</h2><div class="cd"><div class="f"><div><label>Início do plano</label><input type="date" value="${S.start}" onchange="S.start=this.value;save();R()"></div>
+ <div><label>Mês do plano</label><select onchange="S.mes=this.value==''?null:+this.value;save();R()"><option value="">Automático (${c.m+1})</option>${Array.from({length:12},(_,i)=>`<option value="${i}" ${S.mes==i?'selected':''}>Mês ${i+1}</option>`).join('')}</select></div>
+ <div><label>Carga da quinzena</label><select onchange="S.q=this.value==''?null:+this.value;save();R()"><option value="">Automática</option><option value="0" ${S.q===0?'selected':''}>Semanas 1–2</option><option value="1" ${S.q===1?'selected':''}>Semanas 3–4</option></select></div></div>
+ <p class="mu">Fase ${c.ph+1}: ${PN[c.ph]}. Os exercícios mudam a cada 3 meses; as cargas sugeridas sobem a cada 2 semanas. Você pode editar a carga de qualquer exercício na aba Hoje.</p>
+ <button class="b s" onclick="S.loads={};save();R()">Voltar às cargas sugeridas</button></div>
+ <div class="cd"><h3>Backup dos dados</h3><textarea id="bk" rows="4" placeholder="Cole aqui um backup para restaurar"></textarea><br><br>
+ <button class="b s" onclick="bk.value=JSON.stringify(S)">Gerar backup</button> <button class="b s" onclick="try{S=Object.assign(S,JSON.parse(bk.value));save();R()}catch(e){alert('Backup inválido')}">Restaurar</button></div>`}};
+const MS=[['cin','Cintura'],['pei','Peito'],['bra','Braço'],['cox','Coxa'],['qua','Quadril']];
+// ---------- ações
+function sb(k,j,rs){const t=today();S.chk[t]=S.chk[t]||{};S.chk[t][k]=S.chk[t][k]==j+1?j:j+1;save();R();if(S.chk[t][k]==j+1&&rs)tm(rs)}
+let TI;function tm(s){clearInterval(TI);let r=s;const u=()=>{const e=document.getElementById('tm');if(e){e.style.display='block';e.textContent='Descanso: '+r+' s'}};u();
+ TI=setInterval(()=>{r--;if(r<=0){clearInterval(TI);const e=document.getElementById('tm');if(e)e.textContent='Descanso concluído!';try{navigator.vibrate&&navigator.vibrate(300)}catch(x){}}else u()},1000)}
+function conf(di){const c=cur(),l={};PL[c.ph][di].forEach((s,i)=>{const e=parse(s);if(e.kind!='w')l[e.n]=+(S.loads[c.ph+'|'+di+'|'+i]??sug(e,c.k))});S.done[today()]={d:di,v:vol(di,c),l};save();R()}
+function addm(){const g=k=>document.getElementById('m_'+k).value,o={d:g('d')||today(),t:Date.now()};['peso',...MS.map(a=>a[0])].forEach(k=>{if(g(k))o[k]=+g(k)});S.med.push(o);save();R()}
+// ---------- música (IndexedDB)
+const A=new Audio();let T=[],ci=-1;A.volume=.8;
+const dbp=new Promise(r=>{try{const q=indexedDB.open('treino_music',1);q.onupgradeneeded=()=>q.result.createObjectStore('t',{keyPath:'id',autoIncrement:true});q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)}catch(e){r(null)}});
+async function tx(m,f){const d=await dbp;if(!d)return;return new Promise(r=>{try{const t=d.transaction('t',m),q=f(t.objectStore('t'));t.oncomplete=()=>r(q&&q.result);t.onerror=()=>r()}catch(e){r()}})}
+async function lt(){const a=(await tx('readonly',s=>s.getAll()))||[];T.forEach(t=>URL.revokeObjectURL(t.url));T=a.map(t=>({id:t.id,name:t.name,url:URL.createObjectURL(t.blob)}));mini();if(S.tab=='mus')R()}
+async function addt(fs){for(const f of fs)await tx('readwrite',s=>s.add({name:f.name.replace(/\.[^.]+$/,''),blob:f}));const was=T.length;await lt();if(!was&&T.length)pl(0,1)}
+async function rmt(id){const i=T.findIndex(t=>t.id==id);if(i==ci){A.pause();A.removeAttribute('src');ci=-1}await tx('readwrite',s=>s.delete(id));await lt()}
+function pl(i,np){if(!T.length)return;ci=(i+T.length)%T.length;A.src=T[ci].url;A.play().catch(()=>{});mini();if(S.tab=='mus'&&!np)R()}
+function pp(){if(ci<0)return pl(0);A.paused?A.play():A.pause()}
+A.onended=()=>pl(ci+1);A.onplay=A.onpause=()=>mini();
+A.ontimeupdate=()=>{const s=document.getElementById('sk');if(s&&A.duration)s.value=A.currentTime/A.duration*100};
+function mini(){const m=document.getElementById('mini');m.innerHTML=`<button class="chip" onclick="pl(ci-1)" aria-label="Anterior">⏮</button><button class="chip on" onclick="pp()" aria-label="Tocar ou pausar">${A.paused?'▶':'⏸'}</button><button class="chip" onclick="pl(ci+1)" aria-label="Próxima">⏭</button>
+ <span>${ci>=0?esc(T[ci].name):T.length?'Toque ▶ para ouvir':'Adicione músicas na aba Música'}</span>`}
+// ---------- app
+const TABS=[['hoje','Hoje'],['evo','Evolução'],['med','Medidas'],['mus','Música'],['plano','Plano']];
+function R(){const y=scrollY;document.getElementById('v').innerHTML=V[S.tab]();document.getElementById('nv').innerHTML=TABS.map(([k,l])=>`<button class="${S.tab==k?'on':''}" onclick="S.tab='${k}';save();R();scrollTo(0,0)">${l}</button>`).join('');scrollTo(0,y)}
+R();mini();lt();
+</script></body></html>
